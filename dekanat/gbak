@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+${PREFIX}/bin/gbak_orig "$@" -v -FIX_FSS_METADATA WIN1251 -FIX_FSS_DATA WIN1251
