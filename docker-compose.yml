@@ -12,6 +12,9 @@ services:
 
     healthcheck:
       test: [ "CMD", "bash", "-c", "unset" , "JMX_PORT" ,";" ,"kafka-topics.sh","--zookeeper","zookeeper:2181","--list" ]
+      interval: 15s
+      timeout: 5s
+      retries: 5
 
   kafka:
     image: docker.io/bitnami/kafka:3.3
@@ -25,10 +28,18 @@ services:
     depends_on:
       - zookeeper
     healthcheck:
-      test: ["CMD-SHELL", "kafka-topics.sh --bootstrap-server 127.0.0.1:9092 --topic metaavents --describe"]
-      interval: 2s
-      timeout: 2s
-      retries: 15
+      test: ["CMD", "kafka-topics.sh", "--bootstrap-server", "127.0.0.1:9092", "--topic", "metaevents", "--describe"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+
+  init-kafka:
+    image: ghcr.io/kneu-messenger-pigeon/init-kafka:main
+    environment:
+      - KAFKA_HOST=kafka:9092
+    depends_on:
+      kafka:
+        condition: service_started
 
   kafka-ui:
     image: provectuslabs/kafka-ui
@@ -42,6 +53,9 @@ services:
 
     healthcheck:
       test: ["CMD", "nc", "-vz", "localhost", "8080"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
 
 
   dekanat:
