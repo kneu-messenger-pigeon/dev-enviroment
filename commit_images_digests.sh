@@ -1,11 +1,12 @@
 #!/usr/bin/env sh
 set -e
 
+docker compose create > /dev/null
 #  docker compose -f docker-compose.yml -f digests.yml config
 echo "version: \"3.9\""
 echo "services:"
 
-for SERVICE in $(docker compose ps --services)
+for SERVICE in $(docker compose ps  --all --services)
 do
   ID=$(docker compose images  -q "${SERVICE}")
 
